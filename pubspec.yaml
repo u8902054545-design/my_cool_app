@@ -1,5 +1,5 @@
 name: my_cool_app
-description: My first animated app
+description: A new Flutter project.
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -9,11 +9,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.6
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true
