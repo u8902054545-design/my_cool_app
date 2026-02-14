@@ -5,10 +5,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+
+      # Эта магия создаст недостающие файлы Android/Gradle
+      - run: |
+          flutter create --platforms android .
+          flutter pub get
+
       - run: flutter build apk --release
+
       - uses: actions/upload-artifact@v4
         with:
           name: my-app-apk
