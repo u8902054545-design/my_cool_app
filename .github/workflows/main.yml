@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -21,19 +19,28 @@ jobs:
           flutter-version: '3.24.0'
           channel: 'stable'
 
-      - name: Repair and Commit Structure
-        run: |
-          flutter create --platforms android .
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "Auto-fix Android project structure"
-            git push
-          fi
-
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build APK
-        run: flutter build apk --release
+      - name: Repair and Build APK
+        run: |
+          # 1. Сначала полностью чиним структуру прямо перед сборкой
+          flutter create --platforms android .
+          # 2. Сразу запускаем сборку, пока файлы "свежие"
+          flutter build apk --release
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Build and Deploy Web
+        run: |
+          flutter build web --base-href "/${{ github.event.repository.name }}/"
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
