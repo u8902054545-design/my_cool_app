@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK and Deploy Web
 on: [push]
 jobs:
   build:
@@ -10,14 +10,26 @@ jobs:
         with:
           channel: 'stable'
 
-      # Эта магия создаст недостающие файлы Android/Gradle
+      # Инициализация всех платформ
       - run: |
-          flutter create --platforms android .
+          flutter create --platforms android,web .
           flutter pub get
 
+      # Сборка APK
       - run: flutter build apk --release
 
+      # Сборка Web-версии (с правильной базовой ссылкой для GitHub Pages)
+      - run: flutter build web --base-href "/${{ github.event.repository.name }}/"
+
+      # Загрузка APK в артефакты (как раньше)
       - uses: actions/upload-artifact@v4
         with:
           name: my-app-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+
+      # Публикация Web-версии на GitHub Pages
+      - name: Deploy Web
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
