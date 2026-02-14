@@ -19,14 +19,15 @@ jobs:
           flutter-version: '3.24.0'
           channel: 'stable'
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Repair and Build APK
+      - name: Hard Reset and Build
         run: |
-          # 1. Сначала полностью чиним структуру прямо перед сборкой
+          # 1. Удаляем проблемную папку android полностью
+          rm -rf android
+          # 2. Создаем её с нуля в идеальном виде
           flutter create --platforms android .
-          # 2. Сразу запускаем сборку, пока файлы "свежие"
+          # 3. Подтягиваем зависимости
+          flutter pub get
+          # 4. Собираем APK
           flutter build apk --release
 
       - name: Upload APK Artifact
@@ -34,13 +35,3 @@ jobs:
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-
-      - name: Build and Deploy Web
-        run: |
-          flutter build web --base-href "/${{ github.event.repository.name }}/"
-      
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
