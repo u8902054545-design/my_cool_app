@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "753900658274",
+    "project_id": "my-cool-app-cd6bb",
+    "storage_bucket": "my-cool-app-cd6bb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753900658274:android:8c92875a1c251d38a97b3b",
+        "android_client_info": {
+          "package_name": "com.example.my_cool_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcA6VEsar_QRaJZdSqh-3QCEzo_ZuSwak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
